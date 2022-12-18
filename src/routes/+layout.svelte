@@ -2,9 +2,9 @@
   import "../app.css";
 </script>
 
-<div>
+<div class="prose prose-cyan max-w-none">
   <nav class="">
-    <div class='flex justify-between px-3 py-2 max-w-7xl m-auto'>
+    <div class='flex justify-between py-2 x-container'>
       <a href='/'>Home</a>
 
       <div class="flex gap-3">
@@ -13,4 +13,12 @@
     </div>
   </nav>
   <slot />
+
+  <footer>
+    <div class="x-container flex justify-center">
+      <blockquote>
+        Come buy our ice cream and shove it down your throat ;&#41; 
+      </blockquote>
+    </div>
+  </footer>
 </div>
