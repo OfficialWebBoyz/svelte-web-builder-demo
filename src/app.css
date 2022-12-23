@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+	@apply h-full;
+}
+
 .x-container {
-  @apply px-3 max-w-7xl m-auto;
+	@apply px-3 max-w-7xl m-auto;
 }
