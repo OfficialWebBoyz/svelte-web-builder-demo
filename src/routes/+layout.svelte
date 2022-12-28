@@ -15,6 +15,7 @@
 
 			<div class="flex gap-3">
 				<a href="/flavors">Flavors</a>
+				<a href="/library">Components library</a>
 			</div>
 		</div>
 	</nav>
