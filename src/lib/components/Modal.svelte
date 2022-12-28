@@ -14,6 +14,7 @@
 	import cn from 'classnames';
 
 	export let title: string = '';
+	export let large: boolean = false;
 	export let dimBackdrop: boolean = true;
 </script>
 
@@ -21,7 +22,8 @@
 	id="dialog"
 	bind:this={modal}
 	class={cn(
-		'rounded-md border-2 border-black max-w-7xl',
+		'rounded-2xl md:rounded-md border-2 border-black h-3/5 mb-0 open:animate-slide-up-always-visible md:m-auto md:h-fit md:opacity-0 md:open:animate-slide-up',
+		large ? 'md:max-w-3xl' : 'md:max-w-lg',
 		dimBackdrop && 'backdrop:bg-slate-800 backdrop:opacity-25 shadow-md'
 	)}
 >
@@ -30,28 +32,8 @@
 			<h3 class="my-0">{title}</h3>
 		{/if}
 		<form method="dialog">
-			<button aria-label="close dialog"> X </button>
+			<button aria-label="close dialog" class="py-0">X</button>
 		</form>
 	</div>
 	<slot />
 </dialog>
-
-<style>
-	dialog {
-		opacity: 0;
-	}
-	dialog[open] {
-		animation: slide-up 200ms ease-in 25ms 1 forwards;
-	}
-
-	@keyframes slide-up {
-		from {
-			opacity: 0;
-			transform: translateY(12px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(-12px);
-		}
-	}
-</style>
