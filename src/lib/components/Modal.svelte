@@ -22,7 +22,7 @@
 	id="dialog"
 	bind:this={modal}
 	class={cn(
-		'rounded-2xl md:rounded-md border-2 border-black h-3/5 mb-0 open:animate-slide-up-always-visible md:m-auto md:h-fit md:opacity-0 md:open:animate-slide-up',
+		'rounded-2xl md:rounded-md border-2 w-full border-black h-3/5 mb-0 open:animate-slide-up-always-visible md:m-auto md:h-fit md:opacity-0 md:open:animate-slide-up',
 		large ? 'md:max-w-3xl' : 'md:max-w-lg',
 		dimBackdrop && 'backdrop:bg-slate-800 backdrop:opacity-25 shadow-md'
 	)}

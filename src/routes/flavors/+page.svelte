@@ -75,17 +75,14 @@
 		id={`draggable-${COMPONENT_TYPES.customComponent}`}
 		data-component-type={COMPONENT_TYPES.customComponent}
 		draggable="true"
-		class={cn('text-center p-2', isDragging && 'bg-green-200')}
+		class={cn('text-center p-2 capitalize', isDragging && 'bg-green-200')}
 		on:dragstart={handleDragStart}
 		on:drag={handleItemDrag}
 		on:dragend={handleDragEnd}
 		on:click={triggerModal}
 	>
-		<strong
-			class="capitalize text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-orange-400"
-		>
-			drag <br /> me
-		</strong>
+		Trigger modal
+		<!-- text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-orange-400 -->
 	</button>
 
 	<Modal title="hello">this is a modal with children</Modal>
