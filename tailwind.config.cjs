@@ -5,7 +5,7 @@ module.exports = {
 		extend: {
 			animation: {
 				'slide-up': 'slide-up 300ms ease-in 1 forwards',
-				'slide-up-always-visible': 'slide-up-always-visible 600ms ease 1 forwards'
+				'slide-up-always-visible': 'slide-up-always-visible 600ms ease 1 backwards alternate'
 			},
 			keyframes: {
 				'slide-up': {
