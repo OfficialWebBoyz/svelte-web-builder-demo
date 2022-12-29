@@ -2,6 +2,7 @@
 	import Modal, { triggerModal } from '$lib/components/Modal.svelte';
 	import Accordion, { useAccordion } from '$lib/components/Accordion.svelte';
 	import FileDrop from '$lib/components/FileDrop.svelte';
+	import DatePicker from '$lib/components/DatePicker.svelte';
 
 	const latin =
 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
@@ -12,7 +13,7 @@
 	$: useAccordion(accordionElement);
 </script>
 
-<main>
+<main id='observable-content'>
 	<form class="flex flex-col gap-6 x-container">
 		<section>
 			<h2>Accordion</h2>
@@ -84,5 +85,17 @@
 				<FileDrop />
 			</div>
 		</section>
+
+		<section>
+			<h2>Date Picker</h2>
+
+			<div>
+				<DatePicker label="date" id="date-picker" />
+			</div>
+		</section>
 	</form>
 </main>
+
+<aside class="h-96 grid justify-center items-center border-t-2">
+	non-observable content
+</aside>
