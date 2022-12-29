@@ -3,8 +3,10 @@
 
 	export let id: string;
 
-	function handlePageAnimation(node: HTMLElement, pageId: string) {
-		node.animate(
+	function handlePageAnimation(node: HTMLElement) {
+		// grab first child since element is display contents
+		const firstChild = node.children[0];
+		firstChild.animate(
 			[
 				{
 					opacity: 0,
@@ -12,7 +14,7 @@
 				},
 				{
 					opacity: 1,
-					transform: 'translateY(10%)'
+					transform: 'translateY(0)'
 				}
 			],
 			{
@@ -28,7 +30,7 @@
 </script>
 
 {#key id}
-	<div use:handlePageAnimation={id} class="page-transition-wrapper">
+	<div use:handlePageAnimation class="page-transition-wrapper">
 		<slot />
 	</div>
 {/key}
