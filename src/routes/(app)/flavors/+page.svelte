@@ -9,6 +9,7 @@
 		customComponent: 'custom-nigga'
 	};
 
+	let editMode = false;
 	let isDragging = false;
 	/**
 	 * this represents what is currently being dragged
@@ -28,16 +29,17 @@
 	}
 
 	function handleItemDragEnter(event: DragEvent) {
+		console.log(event);
 		const element = checkElement(event.target);
 		if (element) {
-			element.classList.add('border-orange-500');
+			element.classList.add('!border-orange-500');
 		}
 	}
 
 	function handleItemDragLeave(event: DragEvent) {
 		const element = checkElement(event.target);
 		if (element) {
-			element.classList.remove('border-orange-500');
+			element.classList.remove('!border-orange-500');
 		}
 	}
 
@@ -56,7 +58,7 @@
 		if (element && sourceElement) {
 			console.log({ data: e.dataTransfer?.getData(DATA_Key) });
 			element.appendChild(sourceElement);
-			element.classList.remove('border-orange-500');
+			element.classList.remove('!border-orange-500');
 		}
 		resetState();
 	}
@@ -70,38 +72,62 @@
 <main class="x-container">
 	<h1>Flavors</h1>
 
-	<button
-		type="button"
-		id={`draggable-${COMPONENT_TYPES.customComponent}`}
-		data-component-type={COMPONENT_TYPES.customComponent}
-		draggable="true"
-		class={cn('text-center p-2 capitalize', isDragging && 'bg-green-200')}
-		on:dragstart={handleDragStart}
-		on:drag={handleItemDrag}
-		on:dragend={handleDragEnd}
-		on:click={triggerModal}
-	>
-		Trigger modal
-		<!-- text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-orange-400 -->
-	</button>
+	<div class="grid gap-3">
+		<div>
+			<button
+				type="button"
+				id={`draggable-${COMPONENT_TYPES.customComponent}`}
+				data-component-type={COMPONENT_TYPES.customComponent}
+				draggable={editMode}
+				class={cn('text-center p-2 capitalize', isDragging && 'bg-green-200')}
+				on:dragstart={handleDragStart}
+				on:drag={handleItemDrag}
+				on:dragend={handleDragEnd}
+				on:click={triggerModal}
+			>
+				Trigger modal
+				<!-- text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-orange-400 -->
+			</button>
 
-	<Modal title="hello">this is a modal with children</Modal>
+			<Modal title="hello">this is a modal with children</Modal>
+		</div>
 
-	<!-- the stuff -->
+		<fieldset class="p-3 border-2 rounded-md">
+			<legend class="px-1"> Edit mode </legend>
+			<div>
+				<span>Enable edit mode to drag components around on the page</span>
+				<br />
+				<label for="edit-mode">
+					{#if editMode}
+						Edit mode enabled
+					{:else}
+						Enable edit mode
+					{/if}
+					<input
+						name="edit-mode"
+						id="edit-mode"
+						type="checkbox"
+						on:change={(e) => (editMode = e.currentTarget.checked)}
+					/>
+				</label>
+			</div>
+		</fieldset>
 
-	<div class="flex flex-wrap gap-2">
-		{#each [...Array(blockCount).keys()] as block}
-			<div
-				id={`drag-element-${block}`}
-				class={cn(
-					'p-4 inline-flex border justify-center items-center hover:bg-slate-200',
-					isDragging ? 'border-sky-100' : 'border-transparent'
-				)}
-				on:dragover={(e) => e.preventDefault()}
-				on:dragenter={handleItemDragEnter}
-				on:dragleave={handleItemDragLeave}
-				on:drop={handleDrop}
-			/>
-		{/each}
+		<!-- the stuff -->
+		<div class="flex flex-wrap gap-2">
+			{#each [...Array(blockCount).keys()] as block}
+				<div
+					id={`drag-element-${block}`}
+					class={cn(
+						'p-4 inline-flex border justify-center items-center',
+						editMode ? 'border-sky-100' : 'border-transparent'
+					)}
+					on:dragover={(e) => e.preventDefault()}
+					on:dragenter={handleItemDragEnter}
+					on:dragleave={handleItemDragLeave}
+					on:drop={handleDrop}
+				/>
+			{/each}
+		</div>
 	</div>
 </main>
