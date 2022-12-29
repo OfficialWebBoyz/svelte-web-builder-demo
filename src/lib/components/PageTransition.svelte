@@ -28,7 +28,18 @@
 </script>
 
 {#key id}
-	<div use:handlePageAnimation={id} class="contents [&>*]:flex-grow [&>*]:w-full">
+	<div use:handlePageAnimation={id} class="page-transition-wrapper">
 		<slot />
 	</div>
 {/key}
+
+<style>
+	.page-transition-wrapper {
+		display: contents;
+	}
+	.page-transition-wrapper > :global(*) {
+		flex-grow: 1;
+		width: 100%;
+		position: relative;
+	}
+</style>
