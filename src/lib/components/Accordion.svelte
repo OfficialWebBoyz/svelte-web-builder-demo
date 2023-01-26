@@ -1,56 +1,138 @@
 <script lang="ts" context="module">
-	export function useAccordion(parent: HTMLElement | null) {
-		if (!parent) return;
-		const accordions = parent.querySelectorAll('details');
-		if (accordions.length) {
-			accordions.forEach((item) => {
-				const triggerButton = item.querySelector('summary');
-				triggerButton?.addEventListener('click', (e) => {
-					e.preventDefault();
-					if (!item.open) {
-						accordions.forEach((_item) => {
-							_item.open = false;
-						});
-					}
-					item.open = !item.open;
-				});
-			});
+	let parentElement: HTMLElement | null = null;
+
+	export const useAccordion = (el: typeof parentElement) => parentElement = el
+</script>
+
+<script lang="ts">
+	import { speed as speeds } from "$lib/constants/animations";
+
+	import { buildStyle, px } from "$lib/utils/dom";
+	import { onDestroy, onMount } from "svelte";
+
+	export let id: string = '';
+	export let isOpen: boolean | undefined = undefined;
+	export let title: string;
+	export let speed = speeds.regular;
+
+	/** 
+	 * unset max width for open accordions on window reseize for responsiveness 
+	 * */
+	onMount(() => {
+		window.addEventListener('resize', () => {
+			const openDetails = document.querySelectorAll('details[open]');
+				
+			[...openDetails].forEach((element) => {
+				const details = element as HTMLDetailsElement
+				const content = details.querySelector('.content') as HTMLElement;
+				content && content.style.setProperty('--content-height', 'auto');
+			})
+		})
+	})
+
+	onDestroy(() => {
+		parentElement = null
+	})
+
+	function handleOpen(content: HTMLElement) {
+		content.classList.remove('closed')
+		content.classList.add('control')
+		content.style.setProperty('--content-height', px(content.offsetHeight))
+	}
+
+	function handleClose(content: HTMLElement, callback: () => void) {
+		content.classList.add('closed')
+		content.classList.remove('control')
+		callback()
+	}
+
+	function handleToggle(event: Event) {
+		if (!speed) return;
+		const element = event.target as HTMLElement;
+		const content = element.nextElementSibling as HTMLElement
+		const details = element.parentElement as HTMLDetailsElement
+		if (!content) return;
+		const wasOpen = !details.open
+
+		const onClick = (open: boolean) => {
+			if (open) {
+				handleOpen(content)
+			} else {
+				event.preventDefault()
+				handleClose(content, () => {
+					setTimeout(() => {
+						details.open = false
+					}, speed);
+				})
+			}
+		}
+
+		// single accordion
+		if (parentElement) {
+			onClick(wasOpen)
+			const accordions = parentElement?.querySelectorAll('details');
+			[...accordions]
+				.filter(item => {
+					return item.id !== details.id
+				})
+				.forEach(item => {
+					handleClose(item.querySelector('.content')!, () => {
+						setTimeout(() => {
+							item.open = false
+						}, speed);
+					})
+				})
+		} else {
+			onClick(wasOpen)
 		}
 	}
 </script>
 
-<script lang="ts">
-	/**
-	 * controls singular accordion toggling
-	 */
-	export let id: string = '';
-	export let isOpen: boolean | undefined = undefined;
-	export let title: string;
-</script>
-
-<details {id} open={isOpen} class="rounded-md border-2 py-2 px-3 border-black">
-	<summary class="cursor-pointer list-none">{title}</summary>
-	<div class="content">
+<details
+	{id}
+	open={isOpen}
+	class="rounded-md border-2 py-2 px-3 border-black overflow-hidden"
+	style={buildStyle({
+		'--speed': speed + 'ms'
+	})}
+>
+	<summary on:click={handleToggle} class="cursor-pointer list-none">{title}</summary>
+	<div class="content closed control">
 		<slot />
 	</div>
 </details>
 
 <style>
-	details > .content {
-		opacity: 0;
-		transform: translateY(12px);
-	}
-	details[open] > .content {
-		animation: open-up 300ms ease 1 forwards alternate;
-	}
-
-	@keyframes open-up {
+	@keyframes fade {
 		from {
-			transform: translateY(12px);
+			opacity: 0;
+			max-height: 0;
 		}
 		to {
 			opacity: 1;
-			transform: translateY(0);
+			max-height: var(--content-height);
 		}
+	}
+	@keyframes close {
+		from {
+			opacity: 1;
+			max-height: var(--content-height, 1000px);
+		}
+		to {
+			opacity: 0;
+			max-height: 0;
+		}
+	}
+
+	.content {
+		height: fit-content;
+	}
+
+	.content.closed {
+		animation: close var(--speed) ease 1 forwards;
+	}
+
+	details[open] .content.control {
+		animation: fade var(--speed) ease 1 forwards;
 	}
 </style>
