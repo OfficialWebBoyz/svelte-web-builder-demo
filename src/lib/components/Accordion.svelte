@@ -1,89 +1,93 @@
 <script lang="ts" context="module">
 	let parentElement: HTMLElement | null = null;
 
-	export const useAccordion = (el: typeof parentElement) => parentElement = el
+	export const useAccordion = (el: typeof parentElement) => (parentElement = el);
 </script>
 
 <script lang="ts">
-	import { speed as speeds } from "$lib/constants/animations";
+	import { speed as speeds } from '$lib/constants/animations';
 
-	import { buildStyle, px } from "$lib/utils/dom";
-	import { onDestroy, onMount } from "svelte";
+	import { buildStyle, px } from '$lib/utils/dom';
+	import { onDestroy, onMount } from 'svelte';
 
 	export let id: string = '';
 	export let isOpen: boolean | undefined = undefined;
 	export let title: string;
-	export let speed = speeds.regular;
+	export let speed: number = speeds.regular;
 
-	/** 
-	 * unset max width for open accordions on window reseize for responsiveness 
+	/**
+	 * unset max width for open accordions on window reseize for responsiveness
 	 * */
 	onMount(() => {
 		window.addEventListener('resize', () => {
 			const openDetails = document.querySelectorAll('details[open]');
-				
+
 			[...openDetails].forEach((element) => {
-				const details = element as HTMLDetailsElement
+				const details = element as HTMLDetailsElement;
 				const content = details.querySelector('.content') as HTMLElement;
 				content && content.style.setProperty('--content-height', 'auto');
-			})
-		})
-	})
+			});
+		});
+
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			speed = speeds.quick;
+		}
+	});
 
 	onDestroy(() => {
-		parentElement = null
-	})
+		parentElement = null;
+	});
 
 	function handleOpen(content: HTMLElement) {
-		content.classList.remove('closed')
-		content.classList.add('control')
-		content.style.setProperty('--content-height', px(content.offsetHeight))
+		content.classList.remove('closed');
+		content.classList.add('control');
+		content.style.setProperty('--content-height', px(content.offsetHeight));
 	}
 
-	function handleClose(content: HTMLElement, callback: () => void) {
-		content.classList.add('closed')
-		content.classList.remove('control')
-		callback()
+	function handleClose(content: HTMLElement, callback: VoidFunction) {
+		content.classList.add('closed');
+		content.classList.remove('control');
+		callback();
 	}
 
 	function handleToggle(event: Event) {
 		if (!speed) return;
 		const element = event.target as HTMLElement;
-		const content = element.nextElementSibling as HTMLElement
-		const details = element.parentElement as HTMLDetailsElement
+		const content = element.nextElementSibling as HTMLElement;
+		const details = element.parentElement as HTMLDetailsElement;
 		if (!content) return;
-		const wasOpen = !details.open
+		const wasOpen = !details.open;
 
 		const onClick = (open: boolean) => {
 			if (open) {
-				handleOpen(content)
+				handleOpen(content);
 			} else {
-				event.preventDefault()
+				event.preventDefault();
 				handleClose(content, () => {
 					setTimeout(() => {
-						details.open = false
+						details.open = false;
 					}, speed);
-				})
+				});
 			}
-		}
+		};
 
 		// single accordion
 		if (parentElement) {
-			onClick(wasOpen)
+			onClick(wasOpen);
 			const accordions = parentElement?.querySelectorAll('details');
 			[...accordions]
-				.filter(item => {
-					return item.id !== details.id
+				.filter((item) => {
+					return item.id !== details.id;
 				})
-				.forEach(item => {
+				.forEach((item) => {
 					handleClose(item.querySelector('.content')!, () => {
 						setTimeout(() => {
-							item.open = false
+							item.open = false;
 						}, speed);
-					})
-				})
+					});
+				});
 		} else {
-			onClick(wasOpen)
+			onClick(wasOpen);
 		}
 	}
 </script>
