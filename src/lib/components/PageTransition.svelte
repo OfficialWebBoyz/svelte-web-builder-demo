@@ -10,7 +10,7 @@
 			[
 				{
 					opacity: 0,
-					transform: 'translateY(-10%)'
+					transform: 'translateY(-10px)'
 				},
 				{
 					opacity: 1,
@@ -42,6 +42,6 @@
 	.page-transition-wrapper > :global(*) {
 		flex-grow: 1;
 		width: 100%;
-		position: relative;
+		/* position: relative; */
 	}
 </style>
