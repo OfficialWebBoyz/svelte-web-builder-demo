@@ -4,7 +4,7 @@
 
 	/**
 	 * @see https://www.w3schools.com/howto/howto_js_scroll_indicator.asp
-	*/
+	 */
 	onMount(() => {
 		const element = document.getElementById('myBar');
 		const observableElement = document.getElementById(observableElementId);
@@ -13,7 +13,7 @@
 			const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
 			const height = observableElement.scrollHeight - document.documentElement.clientHeight;
 
-			const scrolled = (winScroll / height) * 100;
+			const scrolled = Math.min(100, (winScroll / height) * 100);
 			element.style.width = `${scrolled}%`;
 		};
 	});
