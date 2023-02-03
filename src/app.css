@@ -7,9 +7,9 @@ body {
 	@apply h-full;
 }
 
-button,
-button[type],
-a.button {
+button:not(.plain),
+button[type]:not(.plain),
+a.button:not(.plain) {
 	@apply px-3 py-2 bg-transparent transition-all duration-300 ease-out bg-purple-500 bg-left-bottom hover:bg-center rounded-sm hover:bg-purple-600 focus-within:outline-1 focus-within:outline-orange-500;
 }
 
