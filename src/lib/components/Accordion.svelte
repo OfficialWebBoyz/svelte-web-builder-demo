@@ -7,136 +7,74 @@
 <script lang="ts">
 	import { speed as speeds } from '$lib/constants/animations';
 
-	import { buildStyle, px } from '$lib/utils/dom';
-	import { onDestroy, onMount } from 'svelte';
+	import { buildStyle } from '$lib/utils/dom';
+	import { onDestroy } from 'svelte';
 
-	export let id: string = '';
+	export let id: string;
 	export let isOpen: boolean | undefined = undefined;
 	export let title: string;
 	export let speed: number = speeds.regular;
-
-	/**
-	 * unset max width for open accordions on window reseize for responsiveness
-	 * */
-	onMount(() => {
-		window.addEventListener('resize', () => {
-			const openDetails = document.querySelectorAll('details[open]');
-
-			[...openDetails].forEach((element) => {
-				const details = element as HTMLDetailsElement;
-				const content = details.querySelector('.content') as HTMLElement;
-				content && content.style.setProperty('--content-height', 'auto');
-			});
-		});
-
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			speed = speeds.quick;
-		}
-	});
 
 	onDestroy(() => {
 		parentElement = null;
 	});
 
-	function handleOpen(content: HTMLElement) {
-		content.classList.remove('closed');
-		content.classList.add('control');
-		content.style.setProperty('--content-height', px(content.offsetHeight));
-	}
-
-	function handleClose(content: HTMLElement, callback: VoidFunction) {
-		content.classList.add('closed');
-		content.classList.remove('control');
-		callback();
-	}
-
-	function handleToggle(event: Event) {
-		if (!speed) return;
-		const element = event.target as HTMLElement;
-		const content = element.nextElementSibling as HTMLElement;
-		const details = element.parentElement as HTMLDetailsElement;
-		if (!content) return;
-		const wasOpen = !details.open;
-
-		const onClick = (open: boolean) => {
-			if (open) {
-				handleOpen(content);
-			} else {
-				event.preventDefault();
-				handleClose(content, () => {
-					setTimeout(() => {
-						details.open = false;
-					}, speed);
-				});
-			}
-		};
-
-		// single accordion
-		if (parentElement) {
-			onClick(wasOpen);
-			const accordions = parentElement?.querySelectorAll('details');
-			[...accordions]
-				.filter((item) => {
-					return item.id !== details.id;
-				})
-				.forEach((item) => {
-					handleClose(item.querySelector('.content')!, () => {
-						setTimeout(() => {
-							item.open = false;
-						}, speed);
-					});
-				});
-		} else {
-			onClick(wasOpen);
-		}
+	function handleChange(event: Event) {
+		const { checked, id } = event.target as HTMLInputElement;
+		isOpen = checked;
+		if (!parentElement) return;
+		const openInputs = parentElement.querySelectorAll('input:checked');
+		([...openInputs] as HTMLInputElement[]).filter((input) => {
+				return input.id !== id;
+			})
+			.forEach((input) => {
+				input.checked = false;
+			});
 	}
 </script>
 
-<details
-	{id}
-	open={isOpen}
-	class="rounded-md border-2 py-2 px-3 border-black overflow-hidden"
+<div
+	class="w-full"
 	style={buildStyle({
 		'--speed': speed + 'ms'
 	})}
 >
-	<summary on:click={handleToggle} class="cursor-pointer list-none">{title}</summary>
-	<div class="content closed control">
+	<label for={id} class="summary btn" aria-expanded={isOpen}>
+		{title}
+		<input
+			type="checkbox"
+			{id}
+			class="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
+			aria-controls={`${id}-content`}
+			on:change={handleChange}
+		/>
+	</label>
+	<div aria-hidden={isOpen} id={`${id}-content`} aria-labelledby={id} class="content">
 		<slot />
 	</div>
-</details>
+</div>
 
 <style>
-	@keyframes fade {
-		from {
-			opacity: 0;
-			max-height: 0;
-		}
-		to {
-			opacity: 1;
-			max-height: var(--content-height);
-		}
+	.summary:has(input:checked) ~ .content {
+		@apply scale-y-100 h-auto border-black opacity-100 py-3 px-4;
+		transition: transform 300ms 10ms ease-in-out, opacity 200ms ease-in-out;
 	}
-	@keyframes close {
-		from {
-			opacity: 1;
-			max-height: var(--content-height, 1000px);
-		}
-		to {
-			opacity: 0;
-			max-height: 0;
-		}
+
+	.summary:has(input:checked) {
+		@apply rounded-b-none;
+	}
+
+	.summary:has(input:focus) {
+		outline: 1px solid #6633ff;
+	}
+
+	.summary {
+		@apply relative text-inherit w-full block rounded-xl py-3 px-4 border border-black;
 	}
 
 	.content {
-		height: fit-content;
-	}
-
-	.content.closed {
-		animation: close var(--speed) ease 1 forwards;
-	}
-
-	details[open] .content.control {
-		animation: fade var(--speed) ease 1 forwards;
+		@apply border border-transparent scale-y-0 h-0 opacity-0 rounded-b-2xl;
+		border-top: none;
+		transform-origin: top center;
 	}
 </style>
