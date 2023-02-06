@@ -4,4 +4,4 @@ export const speed = {
 	medium: 500,
 	slow: 720,
 	snail: 1_111
-};
+} as const;

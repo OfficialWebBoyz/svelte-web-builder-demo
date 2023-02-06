@@ -8,12 +8,18 @@
 {#if !!href}
 	<a
 		{href}
-		class={classNames(className, 'no-underline text-inherit inline-flex justify-between items-center gap-3')}
+		class={classNames(
+			className,
+			'no-underline text-inherit inline-flex justify-between items-center gap-3'
+		)}
 	>
 		<slot />
 	</a>
 {:else}
-	<button type="button" class={classNames(className, 'plain inline-flex justify-between items-center gap-3')}>
+	<button
+		type="button"
+		class={classNames(className, 'plain inline-flex justify-between items-center gap-3')}
+	>
 		<slot />
 	</button>
 {/if}

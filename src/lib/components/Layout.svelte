@@ -18,13 +18,13 @@
 				</div>
 			</div>
 			{#if includeScrollProgress}
-				<ScrollProgress observableElementId='observable-content' />
+				<ScrollProgress observableElementId="observable-content" />
 			{/if}
 		</nav>
 	</header>
-  <div class="contents">
-    <slot />
-  </div>
+	<div class="contents">
+		<slot />
+	</div>
 	<footer>
 		<div class="x-container flex justify-center">
 			<blockquote>Come buy our ice cream and shove it down your throat ;&#41;</blockquote>
