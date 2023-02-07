@@ -24,7 +24,8 @@
 		isOpen = checked;
 		if (!parentElement) return;
 		const openInputs = parentElement.querySelectorAll('input:checked');
-		([...openInputs] as HTMLInputElement[]).filter((input) => {
+		([...openInputs] as HTMLInputElement[])
+			.filter((input) => {
 				return input.id !== id;
 			})
 			.forEach((input) => {

@@ -4,6 +4,8 @@
 	import FileDrop from '$lib/components/FileDrop.svelte';
 	import DatePicker from '$lib/components/DatePicker.svelte';
 	import Menu from '$lib/components/navigation/Menu.svelte';
+	import {fly} from 'svelte/transition'
+	import AppearTransition from '$lib/components/AppearTransition.svelte';
 
 	const latin =
 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
@@ -60,10 +62,10 @@
 				{#if allowMultipleAccordionsOpen}
 					<div class="grid gap-2">
 						<p>Multiple accordions enabled</p>
-						<Accordion title="Accordion item">
+						<Accordion id="acc-uno" title="Accordion item">
 							{latin}
 						</Accordion>
-						<Accordion title="Accordion item">
+						<Accordion id="acc-dos" title="Accordion item">
 							{latin}
 						</Accordion>
 					</div>
@@ -129,6 +131,34 @@
 
 			<Menu items={itemList} />
 		</section>
+
+		<section>
+			<h2>Animations</h2>
+
+			<div class="flex-wrap flex md:flex-nowrap">
+				<!-- use:attatchIntersectObserver={slideInX} -->
+				<AppearTransition replay>
+					<img
+						transition:fly={{
+							duration: 1000,
+							x: -200,
+						}}
+						loading="lazy"
+						width="500"
+						height="550"
+						alt="decorative"
+						src="images/ice_cream.png"
+						class="w-full"
+					/>
+				</AppearTransition>
+				<div>
+					<strong>Caption</strong>
+					<p>{latin}</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- layouts -->
 	</div>
 </main>
 
