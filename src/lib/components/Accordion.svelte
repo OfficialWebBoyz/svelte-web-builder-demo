@@ -50,7 +50,7 @@
 			on:change={handleChange}
 		/>
 	</label>
-	<div aria-hidden={isOpen} id={`${id}-content`} aria-labelledby={id} class="content">
+	<div aria-hidden={!isOpen} id={`${id}-content`} aria-labelledby={id} class="content">
 		<slot />
 	</div>
 </div>
@@ -74,7 +74,7 @@
 	}
 
 	.content {
-		@apply border border-transparent scale-y-0 h-0 opacity-0 rounded-b-2xl;
+		@apply border border-transparent h-0 opacity-0 rounded-b-2xl;
 		border-top: none;
 		transform-origin: top center;
 	}

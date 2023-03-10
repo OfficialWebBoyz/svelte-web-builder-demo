@@ -18,8 +18,7 @@
 	These list items (atoms) join together to make a molecule (list) 🙃
  -->
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<li class={classNames(infix, 'relative')} tabindex="0">
+<li class={classNames(infix, 'relative')}>
 	<NavButton {href} className={classNames(hasChildren && 'has-children')}>
 		{content}
 		{#if hasChildren}

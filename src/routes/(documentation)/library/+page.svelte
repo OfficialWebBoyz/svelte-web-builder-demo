@@ -4,7 +4,7 @@
 	import FileDrop from '$lib/components/FileDrop.svelte';
 	import DatePicker from '$lib/components/DatePicker.svelte';
 	import Menu from '$lib/components/navigation/Menu.svelte';
-	import {fly} from 'svelte/transition'
+	import { fly, fade } from 'svelte/transition';
 	import AppearTransition from '$lib/components/AppearTransition.svelte';
 
 	const latin =
@@ -43,10 +43,11 @@
 	};
 </script>
 
+<!-- id="observable-content" -->
 <main id="observable-content">
 	<div class="flex flex-col gap-6 x-container">
 		<form>
-			<section>
+			<section id='accordion'>
 				<h2>Accordion</h2>
 
 				<label for="accordions"> Allow multiple accordions open </label>
@@ -81,25 +82,25 @@
 
 						<div dir="ltr">
 							<pre class="whitespace-pre-line break-words overflow-scroll w-full">
-								# Devs
-								Multiple accordions are enabled by default. To disable the default functionality,
-							
-								Javascript:
-								let accordionElement: HTMLElement | null = null;
-								$: useAccordion(accordionElement);
-	
-								HTML:
-								&lt;div bind:this={'{accordionElement}'}&gt;
-									<span>{'{Accordion}'}</span>
-								&lt;div&gt;
-							</pre>
+									# Devs
+									Multiple accordions are enabled by default. To disable the default functionality,
+								
+									Javascript:
+									let accordionElement: HTMLElement | null = null;
+									$: useAccordion(accordionElement);
+		
+									HTML:
+									&lt;div bind:this={'{accordionElement}'}&gt;
+										<span>{'{Accordion}'}</span>
+									&lt;div&gt;
+								</pre>
 						</div>
 					</div>
 				{/if}
 			</section>
 		</form>
 
-		<section>
+		<section id="modal">
 			<h2>Modal</h2>
 
 			<div>
@@ -110,7 +111,7 @@
 			</div>
 		</section>
 
-		<section>
+		<section id="file-drop">
 			<h2>File Drop</h2>
 
 			<div>
@@ -118,11 +119,11 @@
 			</div>
 		</section>
 
-		<section>
+		<section id="date-picker">
 			<h2>Date Picker</h2>
 
 			<div>
-				<DatePicker label="date" id="date-picker" />
+				<DatePicker label="date" id="date-picker-element" />
 			</div>
 		</section>
 
@@ -132,23 +133,24 @@
 			<Menu items={itemList} />
 		</section>
 
-		<section>
+		<section id="animations">
 			<h2>Animations</h2>
 
+			<!-- add controls for modifying animations -->
+
 			<div class="flex-wrap flex md:flex-nowrap">
-				<!-- use:attatchIntersectObserver={slideInX} -->
-				<AppearTransition replay>
+				<AppearTransition>
 					<img
 						transition:fly={{
-							duration: 1000,
-							x: -200,
+							duration: 1_000,
+							x: -100
 						}}
 						loading="lazy"
 						width="500"
 						height="550"
 						alt="decorative"
 						src="images/ice_cream.png"
-						class="w-full"
+						class="w-full max-w-7xl m-auto"
 					/>
 				</AppearTransition>
 				<div>
