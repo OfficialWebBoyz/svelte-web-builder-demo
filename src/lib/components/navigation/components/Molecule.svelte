@@ -18,7 +18,7 @@
 	These list items (atoms) join together to make a molecule (list) 🙃
  -->
 
-<li class={classNames(infix, 'relative')}>
+<li class={classNames(infix, 'relative')} tabindex="-1">
 	<NavButton {href} className={classNames(hasChildren && 'has-children')}>
 		{content}
 		{#if hasChildren}
